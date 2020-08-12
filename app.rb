@@ -135,9 +135,7 @@ end
 
 get '/showusers' do
 	db = get_db
-		db.execute 'SELECT * FROM Users ORDER BY id DESC' do |row|
- 			@userlist = "#{@userlist}#{row['id']}.     Имя: #{row['username']}.     Номер телефона: #{row['phone']}.     Дата: #{row['datestamp']}.     Мастер: #{row['barber']}.     Цвет: #{row['color']}.<br><br>"
-		end
+	@results = db.execute 'SELECT * FROM Users ORDER BY id DESC'
 	erb :showusers
 end
 

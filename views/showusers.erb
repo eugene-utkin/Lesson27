@@ -5,28 +5,29 @@
   </head>
   <body>
 <h2>Список клиентов</h2>
+<%= @results %>
+
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
+      <th scope="col">Имя</th>
+      <th scope="col">Телефон</th>
+      <th scope="col">Дата и время</th>
+      <th scope="col">Парикмахер</th>
+      <th scope="col">Цвет</th>
     </tr>
   </thead>
   <tbody>
+  	<% @results.each do |row| %>
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
+      <td><%= row['username']%></td>
+      <td><%= row['phone']%></td>
+      <td><%= row['datestamp']%></td>
+      <td><%= row['barber']%></td>
+      <td><%= row['color']%></td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-    </tr>
+    <% end %>
   </tbody>
 </table>
-<p><%= @userlist %></p>
 </body>
 </html>
