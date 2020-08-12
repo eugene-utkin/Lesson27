@@ -47,7 +47,7 @@
   <p><select class="form-control" name="barber">
     <% @barbers.each {|x| %>
 
-        <option <%= @barber == x ? 'selected' : '' %>><%= x %></option>
+        <option <%= @barber == x['name'] ? 'selected' : '' %>><%= x['name'] %></option>
 
     <% } %>
     

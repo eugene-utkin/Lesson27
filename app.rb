@@ -6,15 +6,28 @@ require 'sinatra/reloader'
 require 'pony'
 require 'sqlite3'
 
+def is_barber_exists? db, name
+	db.execute('select * from Barbers2 where name=?', [name]).length > 0
+
+end
+
+def seed_db db, barbers
+	barbers.each do |barber|
+		if !is_barber_exists? db, barber
+			db.execute 'insert into Barbers2 (name) values (?)', [barber]
+		end
+	end
+end
+
 def get_db
 		db = SQLite3::Database.new 'BarberShop.db'
 		db.results_as_hash = true
 		return db
 end
 
-def get_dbbarbers
-		dbbarbers = SQLite3::Database.new 'Barbers.db'
-		return dbbarbers
+before do
+	db = get_db
+	@barbers = db.execute 'SELECT * from Barbers2'
 end
 
 configure do
@@ -27,14 +40,14 @@ configure do
     		"datestamp" TEXT,
     		"barber" TEXT,
     		"color" TEXT)'
+
+	db.execute	'CREATE TABLE IF NOT EXISTS
+			"Barbers2" (
+			"id" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+			"name" TEXT)'
+	seed_db db, ['Jessie Pinkman', 'Walter White', 'Gus Fring', 'Mike Ehrmantraut']
 end
 
-configure do
-	dbarbers = get_dbbarbers
-	dbarbers.execute	'CREATE TABLE IF NOT EXISTS
-			"Barbers" (
-			"barbername" TEXT PRIMARY KEY UNIQUE)'
-end
 
 get '/' do
 	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School</a>"			
@@ -46,11 +59,8 @@ get '/about' do
 end
 
 get '/visit' do
-	@barbers = []
-	dbbarbers = get_dbbarbers
-	dbbarbers.execute 'SELECT * from Barbers' do |row|
-        @barbers = @barbers + row
-end
+	db = get_db
+	@barbers = db.execute 'SELECT * from Barbers2'
 	erb :visit
 end
 
@@ -60,7 +70,6 @@ post '/visit' do
 	@date = params[:date]
 	@barber = params[:barber]
 	@color = params[:color]
-	@barbers = params[:@barbers]
 
 	hh = { 	:username => 'Пустое имя!',
 			:phone => 'Пустой номер телефона!',
@@ -71,10 +80,8 @@ post '/visit' do
 
 	if @error != ''
 			@barbers = []
-			dbbarbers = get_dbbarbers
-			dbbarbers.execute 'SELECT * from Barbers' do |row|
-        	@barbers = @barbers + row
-        end
+			db = get_db
+			@barbers = db.execute 'SELECT * from Barbers2'
 		return erb :visit
 	end
 
