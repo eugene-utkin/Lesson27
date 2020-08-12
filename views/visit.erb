@@ -1,0 +1,84 @@
+<html>
+<head>
+  
+    
+  </head>
+  <body>
+
+<h2>Записаться</h2>
+<script type="text/javascript">
+    $(function(){
+      $('#color').simplecolorpicker();
+
+      $('#datetimepicker').datetimepicker({
+    format: 'DD/MM/YYYY - HH:mm',
+    // added formatTime 
+    formatTime: 'HH:mm',
+    lang: 'en',
+    startDate: moment().toDate(),
+    minDate: moment().toDate(),
+  });
+      $.datetimepicker.setDateFormatter('moment');
+      $("#startDateTime").datetimepicker({ formatDate: 'd/m/Y', timepicker: true });
+      $("#endDateTime").datetimepicker({ formatDate: 'd/m/Y', timepicker: true });
+    });
+</script>
+
+
+
+<p>На этой странице вы сможете записаться к нам в Barber Shop</p>
+
+<form action="/visit" method="POST">
+  <div class="form-group">
+    <label>Ваше имя</label>
+    <input name="username" type="text" class="form-control" placeholder="Имя" value="<%= @username %>">
+  </div>
+  <div class="form-group">
+    <label>Телефон</label>
+    <input name="phone" type="text" class="form-control" placeholder="Номер" value="<%= @phone %>">
+  </div>
+  <div class="form-group">
+    <label>Когда вас ждать?</label>
+    <input id="datetimepicker" name="date" type="text" class="form-control" placeholder="Дата и время" value="<%= @date %>">
+  </div>
+
+ <div class="form-group">
+  <label>Выберите парикмахера</label>
+  <p><select class="form-control" name="barber">
+    <% @barbers.each {|x| %>
+
+        <option <%= @barber == x ? 'selected' : '' %>><%= x %></option>
+
+    <% } %>
+    
+   </select></p>
+ </div>
+
+ <div class="form-group">
+    <label>В какой цвет хотите покраситься?</label>
+    <select id="color" name="color">
+  <option value="#7bd148">Green</option>
+  <option value="#5484ed">Bold blue</option>
+  <option value="#a4bdfc">Blue</option>
+  <option value="#46d6db">Turquoise</option>
+  <option value="#7ae7bf">Light green</option>
+  <option value="#51b749">Bold green</option>
+  <option value="#fbd75b">Yellow</option>
+  <option value="#ffb878">Orange</option>
+  <option value="#ff887c">Red</option>
+  <option value="#dc2127">Bold red</option>
+  <option value="#dbadff">Purple</option>
+  <option value="#e1e1e1">Gray</option>
+</select>
+  </div>
+
+ 
+
+<br />
+
+  <button type="submit" class="btn btn-primary">Записаться</button>
+</form>
+</body>
+
+
+</html>
